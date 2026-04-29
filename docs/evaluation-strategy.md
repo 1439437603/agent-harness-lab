@@ -25,6 +25,7 @@ It verifies that generated report content includes:
 - Runtime and observability contracts.
 - Machine-readable artifacts for CI or follow-up automation.
 - Configured project check results and their exit codes.
+- Run status and cancellation events.
 
 ## Why This Matters
 

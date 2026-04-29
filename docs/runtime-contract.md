@@ -16,6 +16,8 @@ Agent Harness Lab uses a deliberately small runtime contract so the repository s
 - Outputs are Markdown reports, JSON run summaries, and JSONL event streams.
 - Configured checks run from the project root with captured exit code, stdout, and stderr.
 - Check commands are project-authored configuration and should be reviewed before running on untrusted repositories.
+- Every run writes `.agent-harness/checkpoint.json` unless `state_dir` is overridden.
+- A configured cancel file marks the run as cancelled and skips configured project checks.
 - The harness does not mutate source files during normal report generation.
 - Claims in generated reports are bounded to what this repository can prove.
 - Future LLM or tool integrations should keep this contract visible in generated artifacts.
@@ -23,7 +25,7 @@ Agent Harness Lab uses a deliberately small runtime contract so the repository s
 ## Planned Extensions
 
 - Tool registry with explicit field contracts.
-- Session checkpoints and cancellation state.
+- Richer checkpoint resume semantics across long-running phases.
 - Provider abstraction for LLM calls.
 - Structured observability events persisted as JSONL.
 - Evaluation fixtures with expected tool sequences and final-state checks.

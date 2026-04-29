@@ -60,6 +60,8 @@ project_name: My Service
 output_dir: harness-results
 max_artifact_files: 12
 check_timeout_seconds: 60
+state_dir: .agent-harness
+cancel_file: cancel
 ignore_dirs:
   - node_modules
   - dist
@@ -72,6 +74,22 @@ checks:
 ```
 
 `checks` 会在目标项目根目录执行。不要在不可信仓库里直接运行未知的 `harness.yaml`，需要先检查命令内容。
+
+## 运行状态与取消
+
+每次运行都会写入 checkpoint：
+
+```text
+.agent-harness/checkpoint.json
+```
+
+如果要在检查阶段前取消运行，可以创建配置里的取消文件：
+
+```powershell
+New-Item .\.agent-harness\cancel -ItemType File
+```
+
+当取消文件存在时，harness 会把本次运行标记为 `cancelled`，跳过配置的 checks，仍然写出最终产物，并在 `events.jsonl` 中记录 `cancellation.detected`。
 
 ## 输出产物
 
@@ -95,7 +113,7 @@ checks:
 
 ## 后续方向
 
-- 增加 checkpoint 和 cancel，让长任务可中断、可恢复。
+- 增强 checkpoint 恢复语义，让长任务可以跨阶段恢复。
 - 增加工具注册表，让业务工具有明确参数契约。
 - 接入 LLM provider，把扫描结果和 checks 结果交给模型做更深入分析。
 - 增加多 Agent 审查流程，例如 planner、executor、verifier 分工。

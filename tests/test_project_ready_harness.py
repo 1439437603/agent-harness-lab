@@ -70,7 +70,9 @@ class ProjectReadyHarnessTests(unittest.TestCase):
                 json.loads(line)
                 for line in (output_dir / "events.jsonl").read_text(encoding="utf-8").splitlines()
             ]
-            self.assertEqual(events[0]["event"], "task.loaded")
+            event_names = [event["event"] for event in events]
+            self.assertIn("checkpoint.written", event_names)
+            self.assertIn("task.loaded", event_names)
             self.assertEqual(events[-1]["event"], "evaluation.checked")
 
     def test_run_harness_executes_configured_project_checks(self) -> None:
@@ -112,3 +114,58 @@ class ProjectReadyHarnessTests(unittest.TestCase):
                 for line in (output_dir / "events.jsonl").read_text(encoding="utf-8").splitlines()
             ]
             self.assertIn("checks.completed", [event["event"] for event in events])
+
+    def test_run_harness_writes_completed_checkpoint(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "harness.yaml").write_text(
+                "project_name: Stateful Project\noutput_dir: harness-results\nstate_dir: .agent-harness\n",
+                encoding="utf-8",
+            )
+            task_file = root / "task.md"
+            task_file.write_text("Run with checkpointing.", encoding="utf-8")
+
+            result = run_harness(project_root=root, task_file=task_file)
+
+            self.assertEqual(result.status, "completed")
+            checkpoint = json.loads((root / ".agent-harness" / "checkpoint.json").read_text(encoding="utf-8"))
+            self.assertEqual(checkpoint["status"], "completed")
+            self.assertEqual(checkpoint["phase"], "completed")
+
+    def test_run_harness_respects_cancel_signal(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "harness.yaml").write_text(
+                "\n".join(
+                    [
+                        "project_name: Cancelled Project",
+                        "output_dir: harness-results",
+                        "state_dir: .agent-harness",
+                        "cancel_file: cancel",
+                        "checks:",
+                        "  - name: should-not-run",
+                        "    command: python missing.py",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            state_dir = root / ".agent-harness"
+            state_dir.mkdir()
+            (state_dir / "cancel").write_text("stop", encoding="utf-8")
+            task_file = root / "task.md"
+            task_file.write_text("Run should stop before checks.", encoding="utf-8")
+
+            result = run_harness(project_root=root, task_file=task_file)
+
+            self.assertEqual(result.status, "cancelled")
+            self.assertEqual(result.check_results, [])
+
+            output_dir = root / "harness-results"
+            payload = json.loads((output_dir / "run-result.json").read_text(encoding="utf-8"))
+            self.assertEqual(payload["status"], "cancelled")
+
+            events = [
+                json.loads(line)
+                for line in (output_dir / "events.jsonl").read_text(encoding="utf-8").splitlines()
+            ]
+            self.assertIn("cancellation.detected", [event["event"] for event in events])

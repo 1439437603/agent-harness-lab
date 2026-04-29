@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+.agent-harness/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/

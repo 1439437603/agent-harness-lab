@@ -15,6 +15,8 @@ def build_markdown_report(result: "HarnessResult") -> str:
         "# Agent Harness Lab Run Report",
         "",
         f"- Run time: {result.generated_at}",
+        f"- Status: {result.status}",
+        f"- Status message: {result.status_message}",
         f"- Project: {result.project_name}",
         f"- Project root: `{result.project_root}`",
         "",
@@ -66,6 +68,8 @@ def build_markdown_report(result: "HarnessResult") -> str:
 def result_to_json(result: "HarnessResult") -> dict[str, object]:
     return {
         "generated_at": result.generated_at,
+        "status": result.status,
+        "status_message": result.status_message,
         "project_name": result.project_name,
         "project_root": str(result.project_root),
         "task_file": str(result.task_file),

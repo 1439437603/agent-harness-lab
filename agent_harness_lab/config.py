@@ -25,6 +25,8 @@ class HarnessConfig:
     ignore_dirs: tuple[str, ...] = field(default_factory=lambda: DEFAULT_IGNORE_DIRS)
     max_artifact_files: int = 12
     check_timeout_seconds: int = 60
+    state_dir: str = ".agent-harness"
+    cancel_file: str = "cancel"
     checks: tuple[CheckSpec, ...] = ()
 
 
@@ -96,6 +98,8 @@ def load_config(project_root: Path) -> HarnessConfig:
     output_dir = raw.get("output_dir", "output")
     max_artifact_files = raw.get("max_artifact_files", 12)
     check_timeout_seconds = raw.get("check_timeout_seconds", 60)
+    configured_state_dir = raw.get("state_dir", ".agent-harness")
+    cancel_file = raw.get("cancel_file", "cancel")
     checks = []
     raw_checks = raw.get("checks", [])
     if isinstance(raw_checks, list):
@@ -109,5 +113,7 @@ def load_config(project_root: Path) -> HarnessConfig:
         ignore_dirs=merged_ignore_dirs,
         max_artifact_files=int(max_artifact_files),
         check_timeout_seconds=int(check_timeout_seconds),
+        state_dir=str(configured_state_dir),
+        cancel_file=str(cancel_file),
         checks=tuple(checks),
     )

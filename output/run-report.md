@@ -1,6 +1,8 @@
 # Agent Harness Lab Run Report
 
-- Run time: 2026-04-29T11:12:41
+- Run time: 2026-04-29T11:22:31
+- Status: completed
+- Status message: Run completed.
 - Project: Agent Harness Lab
 - Project root: `D:\yanjiu\agent-harness-lab`
 
@@ -25,25 +27,25 @@ I want an agent harness that can turn a local workspace into a repeatable projec
 
 ## Workspace Scan
 
-- code-or-page: 10 files
-- config-or-data: 2 files
+- code-or-page: 11 files
+- config-or-data: 3 files
 - documentation: 5 files
 - other: 1 files
 
 ## Project Artifacts
 
-- `agent_harness_lab\__init__.py` (code-or-page, 517 bytes)
+- `agent_harness_lab\__init__.py` (code-or-page, 658 bytes)
 - `agent_harness_lab\checks.py` (code-or-page, 1851 bytes)
 - `agent_harness_lab\cli.py` (code-or-page, 2176 bytes)
-- `agent_harness_lab\config.py` (code-or-page, 3587 bytes)
-- `agent_harness_lab\engine.py` (code-or-page, 7462 bytes)
-- `agent_harness_lab\reporting.py` (code-or-page, 3800 bytes)
+- `agent_harness_lab\config.py` (code-or-page, 3857 bytes)
+- `agent_harness_lab\engine.py` (code-or-page, 8648 bytes)
+- `agent_harness_lab\reporting.py` (code-or-page, 3974 bytes)
 - `agent_harness_lab\scanner.py` (code-or-page, 1451 bytes)
-- `agent_workflow.py` (code-or-page, 4482 bytes)
+- `agent_harness_lab\state.py` (code-or-page, 1281 bytes)
+- `agent_workflow.py` (code-or-page, 4654 bytes)
 - `tests\test_agent_workflow.py` (code-or-page, 1973 bytes)
-- `tests\test_project_ready_harness.py` (code-or-page, 4990 bytes)
-- `harness.yaml` (config-or-data, 261 bytes)
-- `pyproject.toml` (config-or-data, 307 bytes)
+- `tests\test_project_ready_harness.py` (code-or-page, 7564 bytes)
+- `.agent-harness\checkpoint.json` (config-or-data, 126 bytes)
 
 ## Runtime Contract
 
@@ -56,8 +58,10 @@ I want an agent harness that can turn a local workspace into a repeatable projec
 ## Observability Events
 
 - `task.loaded`
+- `checkpoint.written`
 - `workspace.scanned`
 - `materials.classified`
+- `cancellation.detected`
 - `checks.completed`
 - `report.generated`
 - `evaluation.checked`

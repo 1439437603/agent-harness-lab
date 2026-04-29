@@ -8,6 +8,7 @@ from agent_harness_lab.checks import CheckResult, run_checks
 from agent_harness_lab.config import HarnessConfig, load_config
 from agent_harness_lab.reporting import build_markdown_report, result_to_json, write_events_jsonl, write_json
 from agent_harness_lab.scanner import FileSummary, scan_workspace
+from agent_harness_lab.state import is_cancelled, write_checkpoint
 
 
 RUNTIME_MODULES = {
@@ -20,8 +21,10 @@ RUNTIME_MODULES = {
 
 OBSERVABILITY_EVENTS = (
     "task.loaded",
+    "checkpoint.written",
     "workspace.scanned",
     "materials.classified",
+    "cancellation.detected",
     "checks.completed",
     "report.generated",
     "evaluation.checked",
@@ -38,6 +41,8 @@ class RuntimeEvent:
 @dataclass(frozen=True)
 class HarnessResult:
     generated_at: str
+    status: str
+    status_message: str
     project_name: str
     project_root: Path
     task_file: Path
@@ -102,6 +107,15 @@ def build_result(
 ) -> tuple[HarnessResult, list[RuntimeEvent]]:
     generated_at = datetime.now().isoformat(timespec="seconds")
     events: list[RuntimeEvent] = []
+    write_checkpoint(
+        project_root,
+        config.state_dir,
+        status="running",
+        phase="task.loaded",
+        message="Loading task",
+        generated_at=generated_at,
+    )
+    events.append(RuntimeEvent("checkpoint.written", "Wrote task.loaded checkpoint", generated_at))
 
     task = read_task(task_file)
     events.append(RuntimeEvent("task.loaded", f"Loaded task from {task_file}", generated_at))
@@ -116,10 +130,29 @@ def build_result(
     artifact_files = [
         item for item in files if item.category in {"documentation", "code-or-page", "config-or-data"}
     ][: config.max_artifact_files]
-    check_results = run_checks(project_root, config.checks, config.check_timeout_seconds)
+    status = "completed"
+    status_message = "Run completed."
+    check_results = []
+    if is_cancelled(project_root, config.state_dir, config.cancel_file):
+        status = "cancelled"
+        status_message = "Cancel signal detected; configured checks were skipped."
+        events.append(RuntimeEvent("cancellation.detected", status_message, generated_at))
+    else:
+        check_results = run_checks(project_root, config.checks, config.check_timeout_seconds)
+
     if check_results:
         passed = sum(1 for check in check_results if check.passed)
         events.append(RuntimeEvent("checks.completed", f"Passed {passed}/{len(check_results)} configured checks", generated_at))
+
+    write_checkpoint(
+        project_root,
+        config.state_dir,
+        status=status,
+        phase=status,
+        message=status_message,
+        generated_at=generated_at,
+    )
+    events.append(RuntimeEvent("checkpoint.written", f"Wrote {status} checkpoint", generated_at))
 
     summary = (
         "Agent Harness Lab is a project-ready, TDD-first harness for scanning local codebases, "
@@ -137,6 +170,8 @@ def build_result(
 
     result = HarnessResult(
         generated_at=generated_at,
+        status=status,
+        status_message=status_message,
         project_name=config.project_name,
         project_root=project_root,
         task_file=task_file,

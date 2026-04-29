@@ -75,6 +75,8 @@ project_name: My Service
 output_dir: harness-results
 max_artifact_files: 12
 check_timeout_seconds: 60
+state_dir: .agent-harness
+cancel_file: cancel
 ignore_dirs:
   - node_modules
   - dist
@@ -87,6 +89,22 @@ checks:
 The harness reads this file before scanning and writes artifacts to `output_dir`.
 Configured checks run from the target project root. Results are included in `run-report.md`, `run-result.json`, and `events.jsonl`.
 
+## Runtime State And Cancellation
+
+Every run writes a checkpoint:
+
+```text
+.agent-harness/checkpoint.json
+```
+
+To request cancellation before the check phase, create the configured cancel file:
+
+```powershell
+New-Item .\.agent-harness\cancel -ItemType File
+```
+
+When the cancel file exists, the harness marks the run as `cancelled`, skips configured checks, writes the final artifacts, and records `cancellation.detected` in `events.jsonl`.
+
 ## What The Harness Demonstrates
 
 - Reads a Markdown task brief.
@@ -96,6 +114,7 @@ Configured checks run from the target project root. Results are included in `run
 - Lists observability events that mark decision points in the workflow.
 - Generates reviewable Markdown plus machine-readable JSON and JSONL artifacts.
 - Runs configured project checks such as tests, lint, or build commands.
+- Writes checkpoint state and respects a cancel signal before running checks.
 - Includes a small evaluation mode with pass/fail checks.
 - Keeps claims bounded to what the repository can prove.
 
@@ -109,7 +128,7 @@ The current prototype maps to a practical Agent Harness structure:
 - `types`: dataclasses for file summaries and evaluation cases.
 - `evaluation`: built-in checks run with `--eval`.
 
-Future versions can add a real tool registry, LLM provider abstraction, session checkpoints, cancellation, and richer observability.
+Future versions can add a real tool registry, LLM provider abstraction, richer checkpoint resume semantics, and deeper observability.
 
 The design details are documented in [`docs/runtime-contract.md`](docs/runtime-contract.md) and [`docs/evaluation-strategy.md`](docs/evaluation-strategy.md).
 

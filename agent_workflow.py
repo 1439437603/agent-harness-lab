@@ -34,6 +34,8 @@ def build_report(task: str, files: list[FileSummary]) -> str:
     config = load_config(ROOT)
     result = HarnessResult(
         generated_at=datetime.now().isoformat(timespec="seconds"),
+        status="completed",
+        status_message="Compatibility report generated.",
         project_name=config.project_name,
         project_root=ROOT,
         task_file=DEFAULT_TASK_FILE,
@@ -69,6 +71,8 @@ def write_report(task_file: Path, report_file: Path) -> Path:
         ignore_dirs=base_config.ignore_dirs,
         max_artifact_files=base_config.max_artifact_files,
         check_timeout_seconds=base_config.check_timeout_seconds,
+        state_dir=base_config.state_dir,
+        cancel_file=base_config.cancel_file,
         checks=(),
     )
     result = run_harness(ROOT, task_file, report_file.parent, config=config)
