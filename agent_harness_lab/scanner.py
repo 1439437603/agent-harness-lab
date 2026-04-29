@@ -18,7 +18,7 @@ def classify_file(path: Path) -> str:
     if suffix in {".html", ".css", ".js", ".ts", ".tsx", ".py", ".go", ".rs", ".java"}:
         return "code-or-page"
     if suffix in {".png", ".jpg", ".jpeg", ".gif", ".webp", ".mp4", ".mov"}:
-        return "media-evidence"
+        return "media"
     if suffix in {".json", ".jsonl", ".yaml", ".yml", ".toml"}:
         return "config-or-data"
     return "other"

@@ -39,9 +39,9 @@ def build_report(task: str, files: list[FileSummary]) -> str:
         task_file=DEFAULT_TASK_FILE,
         task=task,
         files=files,
-        evidence_files=[
+        artifact_files=[
             item for item in files if item.category in {"documentation", "code-or-page", "config-or-data"}
-        ][: config.max_evidence_files],
+        ][: config.max_artifact_files],
         category_counts=summarize_categories(files),
         runtime_modules=RUNTIME_MODULES,
         observability_events=OBSERVABILITY_EVENTS,
@@ -53,7 +53,7 @@ def build_report(task: str, files: list[FileSummary]) -> str:
         ),
         risks=[
             "The harness is deterministic and local; external LLM tool execution is not enabled in v0.2.",
-            "Generated reports should be treated as evidence summaries, not as proof of production usage.",
+            "Generated reports are operational summaries and should be reviewed before use in release workflows.",
         ],
         next_step="Run the harness against a target project and add project-specific evaluation cases.",
         output_dir=ROOT / config.output_dir,
@@ -67,7 +67,7 @@ def write_report(task_file: Path, report_file: Path) -> Path:
         project_name=base_config.project_name,
         output_dir=base_config.output_dir,
         ignore_dirs=base_config.ignore_dirs,
-        max_evidence_files=base_config.max_evidence_files,
+        max_artifact_files=base_config.max_artifact_files,
         check_timeout_seconds=base_config.check_timeout_seconds,
         checks=(),
     )

@@ -29,8 +29,8 @@ def build_markdown_report(result: "HarnessResult") -> str:
     for category in sorted(result.category_counts):
         lines.append(f"- {category}: {result.category_counts[category]} files")
 
-    lines.extend(["", "## Evidence Files", ""])
-    for item in result.evidence_files:
+    lines.extend(["", "## Project Artifacts", ""])
+    for item in result.artifact_files:
         lines.append(f"- `{item.path}` ({item.category}, {item.size} bytes)")
 
     lines.extend(["", "## Runtime Contract", ""])
@@ -70,9 +70,9 @@ def result_to_json(result: "HarnessResult") -> dict[str, object]:
         "project_root": str(result.project_root),
         "task_file": str(result.task_file),
         "category_counts": result.category_counts,
-        "evidence_files": [
+        "artifact_files": [
             {"path": str(item.path), "size": item.size, "category": item.category}
-            for item in result.evidence_files
+            for item in result.artifact_files
         ],
         "runtime_modules": result.runtime_modules,
         "observability_events": list(result.observability_events),

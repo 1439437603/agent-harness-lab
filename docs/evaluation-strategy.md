@@ -18,17 +18,17 @@ python -m agent_harness_lab.cli eval --project D:\path\to\project --task D:\path
 
 It verifies that generated report content includes:
 
-- Workspace scan evidence.
+- Workspace scan structure.
 - Harness execution steps.
 - Bounded claim language.
-- Reproducible evidence references.
+- Reproducible project artifact references.
 - Runtime and observability contracts.
 - Machine-readable artifacts for CI or follow-up automation.
 - Configured project check results and their exit codes.
 
 ## Why This Matters
 
-The project is intended as credible grant evidence. Evaluation prevents the repository from drifting into vague claims or static documentation that cannot be verified.
+The project is intended as a practical development harness. Evaluation prevents the repository from drifting into vague claims or static documentation that cannot be verified.
 
 ## Next Cases To Add
 

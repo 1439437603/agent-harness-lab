@@ -4,9 +4,9 @@
 
 A project-ready, TDD-first Agent Harness for scanning local codebases, producing reproducible agent workflow reports, and validating outputs with lightweight evaluation checks.
 
-Agent Harness Lab is a small, runnable Python harness that can be used against real local projects. It provides task input, workspace scanning, material classification, runtime-contract reporting, observability events, Markdown/JSON/JSONL artifacts, and lightweight evaluation checks.
+Agent Harness Lab is a small, runnable Python harness that can be used against real local projects. It provides task input, workspace scanning, material classification, runtime-contract reporting, observability events, Markdown/JSON/JSONL artifacts, configured project checks, and lightweight evaluation checks.
 
-It is designed as truthful GitHub-ready evidence for an AI agent token grant application. It does not claim production users, commercial impact, or external model integration in v1.
+It is designed as a practical project harness for development teams that want agent workflows to be inspectable, testable, and repeatable before connecting more advanced automation.
 
 ## Why This Exists
 
@@ -17,8 +17,8 @@ The guiding ideas are:
 - Build the smallest useful runtime first.
 - Add evaluation before expanding behavior.
 - Keep tool and output contracts explicit.
-- Record risks and verification evidence.
-- Spend future token budget on long-context analysis, tool execution, and multi-step review loops.
+- Record risks, check results, and operational artifacts.
+- Keep agent workflow runs reproducible before adding deeper automation.
 
 ## Run In This Repository
 
@@ -73,7 +73,7 @@ Add `harness.yaml` to the project root:
 ```yaml
 project_name: My Service
 output_dir: harness-results
-max_evidence_files: 12
+max_artifact_files: 12
 check_timeout_seconds: 60
 ignore_dirs:
   - node_modules
@@ -91,7 +91,7 @@ Configured checks run from the target project root. Results are included in `run
 
 - Reads a Markdown task brief.
 - Scans any local project path using only the Python standard library.
-- Classifies files as documentation, code/page assets, media evidence, or other material.
+- Classifies files as documentation, code/page assets, media, config/data, or other material.
 - Prints a clear runtime contract for engine, tools, storage, types, and evaluation.
 - Lists observability events that mark decision points in the workflow.
 - Generates reviewable Markdown plus machine-readable JSON and JSONL artifacts.
@@ -113,25 +113,10 @@ Future versions can add a real tool registry, LLM provider abstraction, session 
 
 The design details are documented in [`docs/runtime-contract.md`](docs/runtime-contract.md) and [`docs/evaluation-strategy.md`](docs/evaluation-strategy.md).
 
-## Grant Application Copy
-
-For form item 04, use the stronger copy in [`application-answer.md`](application-answer.md).
-
-For form item 05, use this repository link first:
-
-```text
-https://github.com/1439437603/agent-harness-lab
-```
-
-If uploads are supported, also attach:
-
-- Terminal screenshot of `python .\agent_workflow.py`.
-- Generated report screenshot from `output/run-report.md`.
-- Evaluation screenshot of `python .\agent_workflow.py --eval`.
-
 ## Professional Scope Boundaries
 
 - v1 is local and deterministic.
 - v1 does not call external LLM APIs.
-- v1 is not a deployed commercial agent.
-- v1 is a credible foundation for a larger token-intensive agent runtime.
+- v1 does not modify project source code.
+- v1 focuses on scanning, configured checks, reporting, event logs, and lightweight evaluation.
+- v1 is a foundation for a larger agent runtime with tool execution, checkpoints, cancellation, and LLM-backed analysis.

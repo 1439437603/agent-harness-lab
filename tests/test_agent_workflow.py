@@ -11,7 +11,7 @@ class AgentWorkflowTests(unittest.TestCase):
     def test_classify_file(self) -> None:
         self.assertEqual(agent_workflow.classify_file(Path("README.md")), "documentation")
         self.assertEqual(agent_workflow.classify_file(Path("agent_workflow.py")), "code-or-page")
-        self.assertEqual(agent_workflow.classify_file(Path("screen.png")), "media-evidence")
+        self.assertEqual(agent_workflow.classify_file(Path("screen.png")), "media")
         self.assertEqual(agent_workflow.classify_file(Path("archive.zip")), "other")
 
     def test_build_report_contains_required_sections(self) -> None:

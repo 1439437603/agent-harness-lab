@@ -1,6 +1,6 @@
 project_name: Agent Harness Lab
 output_dir: output
-max_evidence_files: 12
+max_artifact_files: 12
 check_timeout_seconds: 60
 ignore_dirs:
   - __pycache__

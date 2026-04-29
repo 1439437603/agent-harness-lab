@@ -43,7 +43,7 @@ class HarnessResult:
     task_file: Path
     task: str
     files: list[FileSummary]
-    evidence_files: list[FileSummary]
+    artifact_files: list[FileSummary]
     category_counts: dict[str, int]
     runtime_modules: dict[str, str]
     observability_events: tuple[str, ...]
@@ -74,14 +74,14 @@ def build_execution_steps(files: list[FileSummary]) -> list[str]:
     steps = [
         "Read the task brief and lock the goal, expected output, and constraints.",
         "Load harness configuration so project name, ignored directories, and output location are explicit.",
-        "Scan the target project and classify available files into documentation, code/page assets, config/data, media evidence, and other materials.",
+        "Scan the target project and classify available files into documentation, code/page assets, config/data, media, and other materials.",
     ]
     if has_docs:
-        steps.append("Use project documentation as the primary source for claims, evidence notes, and review-ready copy.")
+        steps.append("Use project documentation as the primary source for project context, operating notes, and review-ready summaries.")
     if has_code:
-        steps.append("Use source files as inspectable evidence that the harness is analyzing a real project tree.")
+        steps.append("Use source files as inspectable artifacts that show the harness is analyzing a real project tree.")
     if has_config:
-        steps.append("Preserve config/data files as machine-readable evidence for CI or downstream automation.")
+        steps.append("Preserve config/data files as machine-readable artifacts for CI or downstream automation.")
 
     steps.extend(
         [
@@ -113,9 +113,9 @@ def build_result(
     category_counts = summarize_categories(files)
     events.append(RuntimeEvent("materials.classified", f"Found {len(category_counts)} categories", generated_at))
 
-    evidence_files = [
+    artifact_files = [
         item for item in files if item.category in {"documentation", "code-or-page", "config-or-data"}
-    ][: config.max_evidence_files]
+    ][: config.max_artifact_files]
     check_results = run_checks(project_root, config.checks, config.check_timeout_seconds)
     if check_results:
         passed = sum(1 for check in check_results if check.passed)
@@ -127,7 +127,7 @@ def build_result(
     )
     risks = [
         "The harness is deterministic and local; external LLM tool execution is not enabled in v0.2.",
-        "Generated reports should be treated as evidence summaries, not as proof of production usage.",
+        "Generated reports are operational summaries; project owners should review them before using them in release workflows.",
         "Large repositories may need narrower ignore rules before report output is concise.",
     ]
     next_step = (
@@ -142,7 +142,7 @@ def build_result(
         task_file=task_file,
         task=task,
         files=files,
-        evidence_files=evidence_files,
+        artifact_files=artifact_files,
         category_counts=category_counts,
         runtime_modules=RUNTIME_MODULES,
         observability_events=OBSERVABILITY_EVENTS,

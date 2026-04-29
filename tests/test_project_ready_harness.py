@@ -18,7 +18,7 @@ class ProjectReadyHarnessTests(unittest.TestCase):
                     [
                         "project_name: Example Service",
                         "output_dir: .harness-output",
-                        "max_evidence_files: 3",
+                        "max_artifact_files: 3",
                         "ignore_dirs:",
                         "  - node_modules",
                         "  - tmp",
@@ -34,7 +34,7 @@ class ProjectReadyHarnessTests(unittest.TestCase):
 
             self.assertEqual(config.project_name, "Example Service")
             self.assertEqual(config.output_dir, ".harness-output")
-            self.assertEqual(config.max_evidence_files, 3)
+            self.assertEqual(config.max_artifact_files, 3)
             self.assertIn("node_modules", config.ignore_dirs)
             self.assertIn("tmp", config.ignore_dirs)
             self.assertEqual(config.checks[0].name, "unit")

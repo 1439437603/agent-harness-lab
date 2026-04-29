@@ -23,7 +23,7 @@ class HarnessConfig:
     project_name: str
     output_dir: str = "output"
     ignore_dirs: tuple[str, ...] = field(default_factory=lambda: DEFAULT_IGNORE_DIRS)
-    max_evidence_files: int = 12
+    max_artifact_files: int = 12
     check_timeout_seconds: int = 60
     checks: tuple[CheckSpec, ...] = ()
 
@@ -94,7 +94,7 @@ def load_config(project_root: Path) -> HarnessConfig:
 
     project_name = raw.get("project_name", project_root.name)
     output_dir = raw.get("output_dir", "output")
-    max_evidence_files = raw.get("max_evidence_files", 12)
+    max_artifact_files = raw.get("max_artifact_files", 12)
     check_timeout_seconds = raw.get("check_timeout_seconds", 60)
     checks = []
     raw_checks = raw.get("checks", [])
@@ -107,7 +107,7 @@ def load_config(project_root: Path) -> HarnessConfig:
         project_name=str(project_name),
         output_dir=str(output_dir),
         ignore_dirs=merged_ignore_dirs,
-        max_evidence_files=int(max_evidence_files),
+        max_artifact_files=int(max_artifact_files),
         check_timeout_seconds=int(check_timeout_seconds),
         checks=tuple(checks),
     )
