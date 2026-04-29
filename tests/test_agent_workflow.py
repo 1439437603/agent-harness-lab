@@ -21,6 +21,8 @@ class AgentWorkflowTests(unittest.TestCase):
 
         self.assertIn("# Agent Harness Lab Run Report", report)
         self.assertIn("## Workspace Scan", report)
+        self.assertIn("## Runtime Contract", report)
+        self.assertIn("## Observability Events", report)
         self.assertIn("## Harness Steps", report)
         self.assertIn("## Risks", report)
         self.assertIn("Highest-ROI Next Step", report)

@@ -6,12 +6,14 @@ Use these materials to support the token grant application without overstating t
 - Terminal run: `python .\agent_workflow.py`
 - Evaluation run: `python .\agent_workflow.py --eval`
 - Generated report: `output/run-report.md`
+- Runtime contract: `docs/runtime-contract.md`
+- Evaluation strategy: `docs/evaluation-strategy.md`
 - Source file: `agent_workflow.py`
 - Example task: `examples/task.md`
 
 ## Claim Boundaries
 
-- This is a local prototype.
+- This is a local reference implementation.
 - It does not currently call external LLM APIs.
 - It should not be described as a deployed product.
-- It can be described as a runnable, testable Agent Harness foundation.
+- It can be described as a runnable, testable Agent Harness foundation with explicit runtime and evaluation contracts.

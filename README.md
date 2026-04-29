@@ -2,13 +2,13 @@
 
 A TDD-first Agent Harness prototype for building, evaluating, and showcasing reproducible AI agent workflows.
 
-Agent Harness Lab is a small, runnable Python prototype that demonstrates the foundation of an agent runtime: task input, workspace scanning, material classification, step decomposition, bounded risk reporting, evaluation cases, and Markdown report generation.
+Agent Harness Lab is a small, runnable Python reference implementation that demonstrates the foundation of an agent runtime: task input, workspace scanning, material classification, runtime-contract reporting, observability events, evaluation cases, and Markdown report generation.
 
-It is designed as a truthful GitHub-ready proof package for an AI agent token grant application. It does not claim production users, commercial impact, or external model integration in v1.
+It is designed as truthful GitHub-ready evidence for an AI agent token grant application. It does not claim production users, commercial impact, or external model integration in v1.
 
 ## Why This Exists
 
-Many agent demos look impressive but are hard to reproduce. This project starts from the opposite direction: a deterministic harness that can be run, tested, inspected, and extended.
+Many agent demos look impressive but are hard to reproduce. This project starts from the opposite direction: a deterministic harness that can be run, tested, inspected, evaluated, and extended.
 
 The guiding ideas are:
 
@@ -47,6 +47,8 @@ python .\agent_workflow.py --task .\examples\task.md --report .\output\run-repor
 - Reads a Markdown task brief.
 - Scans the repository using only the Python standard library.
 - Classifies files as documentation, code/page assets, media evidence, or other material.
+- Prints a clear runtime contract for engine, tools, storage, types, and evaluation.
+- Lists observability events that mark decision points in the workflow.
 - Generates a reviewable Markdown report.
 - Includes a small evaluation mode with pass/fail checks.
 - Keeps claims bounded to what the repository can prove.
@@ -62,6 +64,8 @@ The current prototype maps to a practical Agent Harness structure:
 - `evaluation`: built-in checks run with `--eval`.
 
 Future versions can add a real tool registry, LLM provider abstraction, session checkpoints, cancellation, and richer observability.
+
+The design details are documented in [`docs/runtime-contract.md`](docs/runtime-contract.md) and [`docs/evaluation-strategy.md`](docs/evaluation-strategy.md).
 
 ## Grant Application Copy
 
@@ -79,7 +83,7 @@ If uploads are supported, also attach:
 - Generated report screenshot from `output/run-report.md`.
 - Evaluation screenshot of `python .\agent_workflow.py --eval`.
 
-## Scope Boundaries
+## Professional Scope Boundaries
 
 - v1 is local and deterministic.
 - v1 does not call external LLM APIs.

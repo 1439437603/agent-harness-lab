@@ -10,6 +10,22 @@ ROOT = Path(__file__).resolve().parent
 DEFAULT_TASK_FILE = ROOT / "examples" / "task.md"
 DEFAULT_REPORT_FILE = ROOT / "output" / "run-report.md"
 
+RUNTIME_MODULES = {
+    "engine": "Task ingestion, workspace scan, step planning, report assembly.",
+    "tools": "Deterministic filesystem inspection with explicit file classification.",
+    "storage": "Markdown task briefs, generated reports, and evaluation artifacts.",
+    "types": "Dataclasses that make file summaries and evaluation cases inspectable.",
+    "evaluation": "Built-in checks that keep the harness output bounded and reproducible.",
+}
+
+OBSERVABILITY_EVENTS = (
+    "task.loaded",
+    "workspace.scanned",
+    "materials.classified",
+    "report.generated",
+    "evaluation.checked",
+)
+
 
 @dataclass(frozen=True)
 class FileSummary:
@@ -130,6 +146,14 @@ def build_report(task: str, files: list[FileSummary]) -> str:
     for item in evidence_files:
         lines.append(f"- `{item.path}` ({item.category}, {item.size} bytes)")
 
+    lines.extend(["", "## Runtime Contract", ""])
+    for name, description in RUNTIME_MODULES.items():
+        lines.append(f"- `{name}`: {description}")
+
+    lines.extend(["", "## Observability Events", ""])
+    for event in OBSERVABILITY_EVENTS:
+        lines.append(f"- `{event}`")
+
     lines.extend(["", "## Harness Steps", ""])
     for index, step in enumerate(steps, start=1):
         lines.append(f"{index}. {step}")
@@ -139,17 +163,17 @@ def build_report(task: str, files: list[FileSummary]) -> str:
             "",
             "## Result Summary",
             "",
-            "Agent Harness Lab is a TDD-first prototype for building reproducible AI agent workflows. "
+            "Agent Harness Lab is a TDD-first reference implementation for building reproducible AI agent workflows. "
             "This run demonstrates a minimal but reviewable loop: task input, workspace scan, material classification, "
-            "step decomposition, risk recording, and Markdown report generation.",
+            "runtime-contract reporting, observability event listing, step decomposition, risk recording, and Markdown report generation.",
             "",
             "The current version intentionally stays local and deterministic. It does not claim production traffic, "
             "commercial impact, or external model integration. The value is that the workflow can be run, inspected, "
-            "tested, and extended into a stronger agent runtime.",
+            "tested, evaluated, and extended into a stronger agent runtime.",
             "",
             "## Risks",
             "",
-            "- This is a local prototype, not a deployed commercial agent.",
+            "- This is a local reference implementation, not a deployed commercial agent.",
             "- It does not call external LLM APIs yet, so model-driven tool execution remains future work.",
             "- Usage evidence should be limited to repository code, terminal runs, generated reports, and screenshots.",
             "",
@@ -182,12 +206,17 @@ def run_eval() -> int:
         EvalCase(
             name="report keeps claims bounded",
             task_file=DEFAULT_TASK_FILE,
-            required_phrases=("local prototype", "does not claim production traffic"),
+            required_phrases=("local reference implementation", "does not claim production traffic"),
         ),
         EvalCase(
             name="report includes reproducible evidence",
             task_file=DEFAULT_TASK_FILE,
             required_phrases=("Evidence Files", "Markdown report generation"),
+        ),
+        EvalCase(
+            name="report exposes runtime and observability contracts",
+            task_file=DEFAULT_TASK_FILE,
+            required_phrases=("Runtime Contract", "Observability Events", "task.loaded"),
         ),
     ]
 
