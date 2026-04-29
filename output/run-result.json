@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T10:55:57",
+  "generated_at": "2026-04-29T10:58:02",
   "project_name": "Agent Harness Lab",
   "project_root": "D:\\yanjiu\\agent-harness-lab",
   "task_file": "D:\\yanjiu\\agent-harness-lab\\examples\\task.md",
@@ -93,7 +93,7 @@
       "exit_code": 0,
       "passed": true,
       "stdout": "",
-      "stderr": "test_build_report_contains_required_sections (test_agent_workflow.AgentWorkflowTests.test_build_report_contains_required_sections) ... ok\ntest_classify_file (test_agent_workflow.AgentWorkflowTests.test_classify_file) ... ok\ntest_write_report_creates_file (test_agent_workflow.AgentWorkflowTests.test_write_report_creates_file) ... ok\ntest_load_config_reads_project_settings (test_project_ready_harness.ProjectReadyHarnessTests.test_load_config_reads_project_settings) ... ok\ntest_run_harness_executes_configured_project_checks (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_executes_configured_project_checks) ... ok\ntest_run_harness_writes_markdown_json_and_events_for_project (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_writes_markdown_json_and_events_for_project) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.094s\n\nOK\n"
+      "stderr": "test_build_report_contains_required_sections (test_agent_workflow.AgentWorkflowTests.test_build_report_contains_required_sections) ... ok\ntest_classify_file (test_agent_workflow.AgentWorkflowTests.test_classify_file) ... ok\ntest_write_report_creates_file (test_agent_workflow.AgentWorkflowTests.test_write_report_creates_file) ... ok\ntest_load_config_reads_project_settings (test_project_ready_harness.ProjectReadyHarnessTests.test_load_config_reads_project_settings) ... ok\ntest_run_harness_executes_configured_project_checks (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_executes_configured_project_checks) ... ok\ntest_run_harness_writes_markdown_json_and_events_for_project (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_writes_markdown_json_and_events_for_project) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.227s\n\nOK\n"
     }
   ],
   "steps": [
