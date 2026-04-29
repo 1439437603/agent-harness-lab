@@ -40,6 +40,70 @@ class ProjectReadyHarnessTests(unittest.TestCase):
             self.assertEqual(config.checks[0].name, "unit")
             self.assertEqual(config.checks[0].command, "python check_ok.py")
 
+    def test_load_config_reads_tool_registry(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "harness.yaml").write_text(
+                "\n".join(
+                    [
+                        "project_name: Tool Project",
+                        "checks:",
+                        "  - name: unit",
+                        "    command: python check_ok.py",
+                        "tools:",
+                        "  - name: repo-scan",
+                        "    description: Scan a project tree for agent-ready files",
+                        "    command_template: python -m agent_harness_lab.cli run --project {project} --task {task}",
+                        "    args: project, task",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            config = load_config(root)
+
+            self.assertEqual(len(config.tools), 1)
+            self.assertEqual(config.tools[0].name, "repo-scan")
+            self.assertEqual(config.tools[0].description, "Scan a project tree for agent-ready files")
+            self.assertEqual(
+                config.tools[0].command_template,
+                "python -m agent_harness_lab.cli run --project {project} --task {task}",
+            )
+            self.assertEqual(config.tools[0].args, ("project", "task"))
+
+    def test_run_harness_reports_registered_tools(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "harness.yaml").write_text(
+                "\n".join(
+                    [
+                        "project_name: Tool Registry Project",
+                        "output_dir: harness-results",
+                        "tools:",
+                        "  - name: repo-scan",
+                        "    description: Scan a project tree for agent-ready files",
+                        "    command_template: python -m agent_harness_lab.cli run --project {project} --task {task}",
+                        "    args: project, task",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            task_file = root / "task.md"
+            task_file.write_text("Validate tool registry output.", encoding="utf-8")
+
+            result = run_harness(project_root=root, task_file=task_file)
+
+            self.assertEqual(len(result.tools), 1)
+            output_dir = root / "harness-results"
+            report = (output_dir / "run-report.md").read_text(encoding="utf-8")
+            self.assertIn("## Tool Registry", report)
+            self.assertIn("repo-scan", report)
+            self.assertIn("project, task", report)
+
+            payload = json.loads((output_dir / "run-result.json").read_text(encoding="utf-8"))
+            self.assertEqual(payload["tools"][0]["name"], "repo-scan")
+            self.assertEqual(payload["tools"][0]["args"], ["project", "task"])
+
     def test_run_harness_writes_markdown_json_and_events_for_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

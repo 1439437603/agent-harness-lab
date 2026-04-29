@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 
 from agent_harness_lab.checks import CheckResult, run_checks
-from agent_harness_lab.config import HarnessConfig, load_config
+from agent_harness_lab.config import HarnessConfig, ToolSpec, load_config
 from agent_harness_lab.reporting import build_markdown_report, result_to_json, write_events_jsonl, write_json
 from agent_harness_lab.scanner import FileSummary, scan_workspace
 from agent_harness_lab.state import is_cancelled, write_checkpoint
@@ -24,6 +24,7 @@ OBSERVABILITY_EVENTS = (
     "checkpoint.written",
     "workspace.scanned",
     "materials.classified",
+    "tools.loaded",
     "cancellation.detected",
     "checks.completed",
     "report.generated",
@@ -52,6 +53,7 @@ class HarnessResult:
     category_counts: dict[str, int]
     runtime_modules: dict[str, str]
     observability_events: tuple[str, ...]
+    tools: tuple[ToolSpec, ...]
     check_results: list[CheckResult]
     steps: list[str]
     summary: str
@@ -130,6 +132,8 @@ def build_result(
     artifact_files = [
         item for item in files if item.category in {"documentation", "code-or-page", "config-or-data"}
     ][: config.max_artifact_files]
+    if config.tools:
+        events.append(RuntimeEvent("tools.loaded", f"Loaded {len(config.tools)} registered tools", generated_at))
     status = "completed"
     status_message = "Run completed."
     check_results = []
@@ -181,6 +185,7 @@ def build_result(
         category_counts=category_counts,
         runtime_modules=RUNTIME_MODULES,
         observability_events=OBSERVABILITY_EVENTS,
+        tools=config.tools,
         check_results=check_results,
         steps=build_execution_steps(files),
         summary=summary,

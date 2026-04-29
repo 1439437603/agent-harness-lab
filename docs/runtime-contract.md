@@ -5,7 +5,7 @@ Agent Harness Lab uses a deliberately small runtime contract so the repository s
 ## Modules
 
 - `engine`: Loads the task, scans the workspace, builds harness steps, and writes artifacts.
-- `tools`: Provides deterministic filesystem inspection and file classification.
+- `tools`: Provides deterministic filesystem inspection, file classification, and declared tool contracts.
 - `storage`: Uses Markdown task briefs plus Markdown, JSON, and JSONL run artifacts.
 - `types`: Defines small dataclasses for file summaries and evaluation cases.
 - `evaluation`: Runs repeatable pass/fail checks against generated report content.
@@ -14,6 +14,8 @@ Agent Harness Lab uses a deliberately small runtime contract so the repository s
 
 - Inputs are explicit Markdown task files.
 - Outputs are Markdown reports, JSON run summaries, and JSONL event streams.
+- Registered tools must declare `name`, `description`, and `command_template`; optional `args` document the parameter contract.
+- Tool declarations are reported, not executed automatically.
 - Configured checks run from the project root with captured exit code, stdout, and stderr.
 - Check commands are project-authored configuration and should be reviewed before running on untrusted repositories.
 - Every run writes `.agent-harness/checkpoint.json` unless `state_dir` is overridden.
@@ -24,7 +26,7 @@ Agent Harness Lab uses a deliberately small runtime contract so the repository s
 
 ## Planned Extensions
 
-- Tool registry with explicit field contracts.
+- Tool invocation enforcement against registered argument contracts.
 - Richer checkpoint resume semantics across long-running phases.
 - Provider abstraction for LLM calls.
 - Structured observability events persisted as JSONL.

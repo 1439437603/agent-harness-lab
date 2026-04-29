@@ -28,6 +28,15 @@ class HarnessConfig:
     state_dir: str = ".agent-harness"
     cancel_file: str = "cancel"
     checks: tuple[CheckSpec, ...] = ()
+    tools: tuple["ToolSpec", ...] = ()
+
+
+@dataclass(frozen=True)
+class ToolSpec:
+    name: str
+    description: str
+    command_template: str
+    args: tuple[str, ...] = ()
 
 
 def _coerce_value(value: str) -> str | int:
@@ -47,6 +56,7 @@ def _read_simple_yaml(path: Path) -> dict[str, object]:
         if not line.strip():
             continue
 
+        leading_indent = len(raw_line) - len(raw_line.lstrip(" "))
         stripped = line.strip()
         if stripped.startswith("- ") and current_list_key:
             values = data.setdefault(current_list_key, [])
@@ -61,7 +71,7 @@ def _read_simple_yaml(path: Path) -> dict[str, object]:
                     current_mapping = None
             continue
 
-        if current_mapping is not None and ":" in stripped:
+        if current_mapping is not None and leading_indent > 0 and ":" in stripped:
             key, value = stripped.split(":", 1)
             current_mapping[key.strip()] = _coerce_value(value)
             continue
@@ -107,6 +117,32 @@ def load_config(project_root: Path) -> HarnessConfig:
             if isinstance(item, dict) and item.get("name") and item.get("command"):
                 checks.append(CheckSpec(name=str(item["name"]), command=str(item["command"])))
 
+    tools = []
+    raw_tools = raw.get("tools", [])
+    if isinstance(raw_tools, list):
+        for item in raw_tools:
+            if (
+                isinstance(item, dict)
+                and item.get("name")
+                and item.get("description")
+                and item.get("command_template")
+            ):
+                raw_args = item.get("args", "")
+                if isinstance(raw_args, str):
+                    args = tuple(part.strip() for part in raw_args.split(",") if part.strip())
+                elif isinstance(raw_args, list):
+                    args = tuple(str(part).strip() for part in raw_args if str(part).strip())
+                else:
+                    args = ()
+                tools.append(
+                    ToolSpec(
+                        name=str(item["name"]),
+                        description=str(item["description"]),
+                        command_template=str(item["command_template"]),
+                        args=args,
+                    )
+                )
+
     return HarnessConfig(
         project_name=str(project_name),
         output_dir=str(output_dir),
@@ -116,4 +152,5 @@ def load_config(project_root: Path) -> HarnessConfig:
         state_dir=str(configured_state_dir),
         cancel_file=str(cancel_file),
         checks=tuple(checks),
+        tools=tuple(tools),
     )

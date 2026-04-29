@@ -43,6 +43,16 @@ def build_markdown_report(result: "HarnessResult") -> str:
     for event in result.observability_events:
         lines.append(f"- `{event}`")
 
+    lines.extend(["", "## Tool Registry", ""])
+    if result.tools:
+        for tool in result.tools:
+            args = ", ".join(tool.args) if tool.args else "none"
+            lines.append(f"- `{tool.name}`: {tool.description}")
+            lines.append(f"  - command template: `{tool.command_template}`")
+            lines.append(f"  - args: {args}")
+    else:
+        lines.append("- No tools registered.")
+
     lines.extend(["", "## Project Checks", ""])
     if result.check_results:
         for check in result.check_results:
@@ -80,6 +90,15 @@ def result_to_json(result: "HarnessResult") -> dict[str, object]:
         ],
         "runtime_modules": result.runtime_modules,
         "observability_events": list(result.observability_events),
+        "tools": [
+            {
+                "name": tool.name,
+                "description": tool.description,
+                "command_template": tool.command_template,
+                "args": list(tool.args),
+            }
+            for tool in result.tools
+        ],
         "checks": [
             {
                 "name": check.name,

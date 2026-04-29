@@ -1,6 +1,6 @@
 # Agent Harness Lab Run Report
 
-- Run time: 2026-04-29T11:22:31
+- Run time: 2026-04-29T12:02:40
 - Status: completed
 - Status message: Run completed.
 - Project: Agent Harness Lab
@@ -34,17 +34,17 @@ I want an agent harness that can turn a local workspace into a repeatable projec
 
 ## Project Artifacts
 
-- `agent_harness_lab\__init__.py` (code-or-page, 658 bytes)
+- `agent_harness_lab\__init__.py` (code-or-page, 684 bytes)
 - `agent_harness_lab\checks.py` (code-or-page, 1851 bytes)
 - `agent_harness_lab\cli.py` (code-or-page, 2176 bytes)
-- `agent_harness_lab\config.py` (code-or-page, 3857 bytes)
-- `agent_harness_lab\engine.py` (code-or-page, 8648 bytes)
-- `agent_harness_lab\reporting.py` (code-or-page, 3974 bytes)
+- `agent_harness_lab\config.py` (code-or-page, 5170 bytes)
+- `agent_harness_lab\engine.py` (code-or-page, 8873 bytes)
+- `agent_harness_lab\reporting.py` (code-or-page, 4666 bytes)
 - `agent_harness_lab\scanner.py` (code-or-page, 1451 bytes)
 - `agent_harness_lab\state.py` (code-or-page, 1281 bytes)
-- `agent_workflow.py` (code-or-page, 4654 bytes)
+- `agent_workflow.py` (code-or-page, 4672 bytes)
 - `tests\test_agent_workflow.py` (code-or-page, 1973 bytes)
-- `tests\test_project_ready_harness.py` (code-or-page, 7564 bytes)
+- `tests\test_project_ready_harness.py` (code-or-page, 10499 bytes)
 - `.agent-harness\checkpoint.json` (config-or-data, 126 bytes)
 
 ## Runtime Contract
@@ -61,10 +61,20 @@ I want an agent harness that can turn a local workspace into a repeatable projec
 - `checkpoint.written`
 - `workspace.scanned`
 - `materials.classified`
+- `tools.loaded`
 - `cancellation.detected`
 - `checks.completed`
 - `report.generated`
 - `evaluation.checked`
+
+## Tool Registry
+
+- `project-scan`: Scan a target project and produce Markdown, JSON, and JSONL harness artifacts
+  - command template: `python -m agent_harness_lab.cli run --project {project} --task {task}`
+  - args: project, task
+- `project-eval`: Run the harness and evaluate the generated report for required runtime sections
+  - command template: `python -m agent_harness_lab.cli eval --project {project} --task {task}`
+  - args: project, task
 
 ## Project Checks
 

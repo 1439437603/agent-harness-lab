@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T11:22:31",
+  "generated_at": "2026-04-29T12:02:40",
   "status": "completed",
   "status_message": "Run completed.",
   "project_name": "Agent Harness Lab",
@@ -14,7 +14,7 @@
   "artifact_files": [
     {
       "path": "agent_harness_lab\\__init__.py",
-      "size": 658,
+      "size": 684,
       "category": "code-or-page"
     },
     {
@@ -29,17 +29,17 @@
     },
     {
       "path": "agent_harness_lab\\config.py",
-      "size": 3857,
+      "size": 5170,
       "category": "code-or-page"
     },
     {
       "path": "agent_harness_lab\\engine.py",
-      "size": 8648,
+      "size": 8873,
       "category": "code-or-page"
     },
     {
       "path": "agent_harness_lab\\reporting.py",
-      "size": 3974,
+      "size": 4666,
       "category": "code-or-page"
     },
     {
@@ -54,7 +54,7 @@
     },
     {
       "path": "agent_workflow.py",
-      "size": 4654,
+      "size": 4672,
       "category": "code-or-page"
     },
     {
@@ -64,7 +64,7 @@
     },
     {
       "path": "tests\\test_project_ready_harness.py",
-      "size": 7564,
+      "size": 10499,
       "category": "code-or-page"
     },
     {
@@ -85,10 +85,31 @@
     "checkpoint.written",
     "workspace.scanned",
     "materials.classified",
+    "tools.loaded",
     "cancellation.detected",
     "checks.completed",
     "report.generated",
     "evaluation.checked"
+  ],
+  "tools": [
+    {
+      "name": "project-scan",
+      "description": "Scan a target project and produce Markdown, JSON, and JSONL harness artifacts",
+      "command_template": "python -m agent_harness_lab.cli run --project {project} --task {task}",
+      "args": [
+        "project",
+        "task"
+      ]
+    },
+    {
+      "name": "project-eval",
+      "description": "Run the harness and evaluate the generated report for required runtime sections",
+      "command_template": "python -m agent_harness_lab.cli eval --project {project} --task {task}",
+      "args": [
+        "project",
+        "task"
+      ]
+    }
   ],
   "checks": [
     {
@@ -97,7 +118,7 @@
       "exit_code": 0,
       "passed": true,
       "stdout": "",
-      "stderr": "test_build_report_contains_required_sections (test_agent_workflow.AgentWorkflowTests.test_build_report_contains_required_sections) ... ok\ntest_classify_file (test_agent_workflow.AgentWorkflowTests.test_classify_file) ... ok\ntest_write_report_creates_file (test_agent_workflow.AgentWorkflowTests.test_write_report_creates_file) ... ok\ntest_load_config_reads_project_settings (test_project_ready_harness.ProjectReadyHarnessTests.test_load_config_reads_project_settings) ... ok\ntest_run_harness_executes_configured_project_checks (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_executes_configured_project_checks) ... ok\ntest_run_harness_respects_cancel_signal (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_respects_cancel_signal) ... ok\ntest_run_harness_writes_completed_checkpoint (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_writes_completed_checkpoint) ... ok\ntest_run_harness_writes_markdown_json_and_events_for_project (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_writes_markdown_json_and_events_for_project) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.243s\n\nOK\n"
+      "stderr": "test_build_report_contains_required_sections (test_agent_workflow.AgentWorkflowTests.test_build_report_contains_required_sections) ... ok\ntest_classify_file (test_agent_workflow.AgentWorkflowTests.test_classify_file) ... ok\ntest_write_report_creates_file (test_agent_workflow.AgentWorkflowTests.test_write_report_creates_file) ... ok\ntest_load_config_reads_project_settings (test_project_ready_harness.ProjectReadyHarnessTests.test_load_config_reads_project_settings) ... ok\ntest_load_config_reads_tool_registry (test_project_ready_harness.ProjectReadyHarnessTests.test_load_config_reads_tool_registry) ... ok\ntest_run_harness_executes_configured_project_checks (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_executes_configured_project_checks) ... ok\ntest_run_harness_reports_registered_tools (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_reports_registered_tools) ... ok\ntest_run_harness_respects_cancel_signal (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_respects_cancel_signal) ... ok\ntest_run_harness_writes_completed_checkpoint (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_writes_completed_checkpoint) ... ok\ntest_run_harness_writes_markdown_json_and_events_for_project (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_writes_markdown_json_and_events_for_project) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.089s\n\nOK\n"
     }
   ],
   "steps": [

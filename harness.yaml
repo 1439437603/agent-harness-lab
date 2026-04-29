@@ -12,3 +12,12 @@ ignore_dirs:
 checks:
   - name: unit-tests
     command: python -m unittest discover -s tests -v
+tools:
+  - name: project-scan
+    description: Scan a target project and produce Markdown, JSON, and JSONL harness artifacts
+    command_template: python -m agent_harness_lab.cli run --project {project} --task {task}
+    args: project, task
+  - name: project-eval
+    description: Run the harness and evaluate the generated report for required runtime sections
+    command_template: python -m agent_harness_lab.cli eval --project {project} --task {task}
+    args: project, task

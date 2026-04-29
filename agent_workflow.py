@@ -47,6 +47,7 @@ def build_report(task: str, files: list[FileSummary]) -> str:
         category_counts=summarize_categories(files),
         runtime_modules=RUNTIME_MODULES,
         observability_events=OBSERVABILITY_EVENTS,
+        tools=(),
         check_results=[],
         steps=build_execution_steps(files),
         summary=(

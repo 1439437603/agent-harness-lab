@@ -4,7 +4,7 @@
 
 A project-ready, TDD-first Agent Harness for scanning local codebases, producing reproducible agent workflow reports, and validating outputs with lightweight evaluation checks.
 
-Agent Harness Lab is a small, runnable Python harness that can be used against real local projects. It provides task input, workspace scanning, material classification, runtime-contract reporting, observability events, Markdown/JSON/JSONL artifacts, configured project checks, and lightweight evaluation checks.
+Agent Harness Lab is a small, runnable Python harness that can be used against real local projects. It provides task input, workspace scanning, material classification, runtime-contract reporting, a configurable tool registry, observability events, Markdown/JSON/JSONL artifacts, configured project checks, and lightweight evaluation checks.
 
 It is designed as a practical project harness for development teams that want agent workflows to be inspectable, testable, and repeatable before connecting more advanced automation.
 
@@ -84,10 +84,16 @@ ignore_dirs:
 checks:
   - name: unit-tests
     command: python -m unittest discover -s tests -v
+tools:
+  - name: project-scan
+    description: Scan a target project and produce harness artifacts
+    command_template: python -m agent_harness_lab.cli run --project {project} --task {task}
+    args: project, task
 ```
 
 The harness reads this file before scanning and writes artifacts to `output_dir`.
 Configured checks run from the target project root. Results are included in `run-report.md`, `run-result.json`, and `events.jsonl`.
+Registered tools are documented in the generated Markdown report and serialized into `run-result.json` so agent runtimes can inspect available commands before using them.
 
 ## Runtime State And Cancellation
 
@@ -112,6 +118,7 @@ When the cancel file exists, the harness marks the run as `cancelled`, skips con
 - Classifies files as documentation, code/page assets, media, config/data, or other material.
 - Prints a clear runtime contract for engine, tools, storage, types, and evaluation.
 - Lists observability events that mark decision points in the workflow.
+- Documents registered tools with names, descriptions, argument contracts, and command templates.
 - Generates reviewable Markdown plus machine-readable JSON and JSONL artifacts.
 - Runs configured project checks such as tests, lint, or build commands.
 - Writes checkpoint state and respects a cancel signal before running checks.
@@ -128,7 +135,7 @@ The current prototype maps to a practical Agent Harness structure:
 - `types`: dataclasses for file summaries and evaluation cases.
 - `evaluation`: built-in checks run with `--eval`.
 
-Future versions can add a real tool registry, LLM provider abstraction, richer checkpoint resume semantics, and deeper observability.
+Future versions can add tool invocation enforcement, LLM provider abstraction, richer checkpoint resume semantics, and deeper observability.
 
 The design details are documented in [`docs/runtime-contract.md`](docs/runtime-contract.md) and [`docs/evaluation-strategy.md`](docs/evaluation-strategy.md).
 
@@ -137,5 +144,5 @@ The design details are documented in [`docs/runtime-contract.md`](docs/runtime-c
 - v1 is local and deterministic.
 - v1 does not call external LLM APIs.
 - v1 does not modify project source code.
-- v1 focuses on scanning, configured checks, reporting, event logs, and lightweight evaluation.
+- v1 focuses on scanning, registered tool contracts, configured checks, reporting, event logs, and lightweight evaluation.
 - v1 is a foundation for a larger agent runtime with tool execution, checkpoints, cancellation, and LLM-backed analysis.
