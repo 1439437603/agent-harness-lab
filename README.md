@@ -1,5 +1,7 @@
 # Agent Harness Lab
 
+[中文说明](README.zh-CN.md)
+
 A project-ready, TDD-first Agent Harness for scanning local codebases, producing reproducible agent workflow reports, and validating outputs with lightweight evaluation checks.
 
 Agent Harness Lab is a small, runnable Python harness that can be used against real local projects. It provides task input, workspace scanning, material classification, runtime-contract reporting, observability events, Markdown/JSON/JSONL artifacts, and lightweight evaluation checks.
