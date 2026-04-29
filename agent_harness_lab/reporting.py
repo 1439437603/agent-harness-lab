@@ -41,6 +41,18 @@ def build_markdown_report(result: "HarnessResult") -> str:
     for event in result.observability_events:
         lines.append(f"- `{event}`")
 
+    lines.extend(["", "## Project Checks", ""])
+    if result.check_results:
+        for check in result.check_results:
+            status = "PASS" if check.passed else "FAIL"
+            lines.append(f"- {status} `{check.name}`: `{check.command}` (exit {check.exit_code})")
+            if check.stdout.strip():
+                lines.append(f"  - stdout: {check.stdout.strip().splitlines()[0]}")
+            if check.stderr.strip():
+                lines.append(f"  - stderr: {check.stderr.strip().splitlines()[0]}")
+    else:
+        lines.append("- No project checks configured.")
+
     lines.extend(["", "## Harness Steps", ""])
     for index, step in enumerate(result.steps, start=1):
         lines.append(f"{index}. {step}")
@@ -64,6 +76,17 @@ def result_to_json(result: "HarnessResult") -> dict[str, object]:
         ],
         "runtime_modules": result.runtime_modules,
         "observability_events": list(result.observability_events),
+        "checks": [
+            {
+                "name": check.name,
+                "command": check.command,
+                "exit_code": check.exit_code,
+                "passed": check.passed,
+                "stdout": check.stdout,
+                "stderr": check.stderr,
+            }
+            for check in result.check_results
+        ],
         "steps": result.steps,
         "risks": result.risks,
         "next_step": result.next_step,

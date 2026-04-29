@@ -24,6 +24,7 @@ It verifies that generated report content includes:
 - Reproducible evidence references.
 - Runtime and observability contracts.
 - Machine-readable artifacts for CI or follow-up automation.
+- Configured project check results and their exit codes.
 
 ## Why This Matters
 

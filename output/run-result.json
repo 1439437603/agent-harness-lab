@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-04-29T10:36:30",
+  "generated_at": "2026-04-29T10:55:57",
   "project_name": "Agent Harness Lab",
   "project_root": "D:\\yanjiu\\agent-harness-lab",
   "task_file": "D:\\yanjiu\\agent-harness-lab\\examples\\task.md",
   "category_counts": {
-    "code-or-page": 9,
+    "code-or-page": 10,
     "config-or-data": 2,
     "documentation": 6,
     "other": 1
@@ -12,7 +12,12 @@
   "evidence_files": [
     {
       "path": "agent_harness_lab\\__init__.py",
-      "size": 421,
+      "size": 517,
+      "category": "code-or-page"
+    },
+    {
+      "path": "agent_harness_lab\\checks.py",
+      "size": 1851,
       "category": "code-or-page"
     },
     {
@@ -22,17 +27,17 @@
     },
     {
       "path": "agent_harness_lab\\config.py",
-      "size": 2416,
+      "size": 3587,
       "category": "code-or-page"
     },
     {
       "path": "agent_harness_lab\\engine.py",
-      "size": 6855,
+      "size": 7423,
       "category": "code-or-page"
     },
     {
       "path": "agent_harness_lab\\reporting.py",
-      "size": 2864,
+      "size": 3797,
       "category": "code-or-page"
     },
     {
@@ -42,7 +47,7 @@
     },
     {
       "path": "agent_workflow.py",
-      "size": 4086,
+      "size": 4475,
       "category": "code-or-page"
     },
     {
@@ -52,23 +57,18 @@
     },
     {
       "path": "tests\\test_project_ready_harness.py",
-      "size": 2943,
+      "size": 4990,
       "category": "code-or-page"
     },
     {
       "path": "harness.yaml",
-      "size": 153,
+      "size": 261,
       "category": "config-or-data"
     },
     {
       "path": "pyproject.toml",
       "size": 307,
       "category": "config-or-data"
-    },
-    {
-      "path": "README.md",
-      "size": 4296,
-      "category": "documentation"
     }
   ],
   "runtime_modules": {
@@ -82,8 +82,19 @@
     "task.loaded",
     "workspace.scanned",
     "materials.classified",
+    "checks.completed",
     "report.generated",
     "evaluation.checked"
+  ],
+  "checks": [
+    {
+      "name": "unit-tests",
+      "command": "python -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "passed": true,
+      "stdout": "",
+      "stderr": "test_build_report_contains_required_sections (test_agent_workflow.AgentWorkflowTests.test_build_report_contains_required_sections) ... ok\ntest_classify_file (test_agent_workflow.AgentWorkflowTests.test_classify_file) ... ok\ntest_write_report_creates_file (test_agent_workflow.AgentWorkflowTests.test_write_report_creates_file) ... ok\ntest_load_config_reads_project_settings (test_project_ready_harness.ProjectReadyHarnessTests.test_load_config_reads_project_settings) ... ok\ntest_run_harness_executes_configured_project_checks (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_executes_configured_project_checks) ... ok\ntest_run_harness_writes_markdown_json_and_events_for_project (test_project_ready_harness.ProjectReadyHarnessTests.test_run_harness_writes_markdown_json_and_events_for_project) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.094s\n\nOK\n"
+    }
   ],
   "steps": [
     "Read the task brief and lock the goal, expected output, and constraints.",
@@ -93,6 +104,7 @@
     "Use source files as inspectable evidence that the harness is analyzing a real project tree.",
     "Preserve config/data files as machine-readable evidence for CI or downstream automation.",
     "Generate Markdown, JSON, and JSONL artifacts so humans, scripts, and CI can consume the same run.",
+    "Run configured project checks from harness.yaml and capture their outputs for review.",
     "Run lightweight evaluation checks that guard against vague or unsupported claims.",
     "Keep claims bounded to what the target project and generated artifacts prove."
   ],

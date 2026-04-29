@@ -22,6 +22,9 @@ class ProjectReadyHarnessTests(unittest.TestCase):
                         "ignore_dirs:",
                         "  - node_modules",
                         "  - tmp",
+                        "checks:",
+                        "  - name: unit",
+                        "    command: python check_ok.py",
                     ]
                 ),
                 encoding="utf-8",
@@ -34,6 +37,8 @@ class ProjectReadyHarnessTests(unittest.TestCase):
             self.assertEqual(config.max_evidence_files, 3)
             self.assertIn("node_modules", config.ignore_dirs)
             self.assertIn("tmp", config.ignore_dirs)
+            self.assertEqual(config.checks[0].name, "unit")
+            self.assertEqual(config.checks[0].command, "python check_ok.py")
 
     def test_run_harness_writes_markdown_json_and_events_for_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -67,3 +72,43 @@ class ProjectReadyHarnessTests(unittest.TestCase):
             ]
             self.assertEqual(events[0]["event"], "task.loaded")
             self.assertEqual(events[-1]["event"], "evaluation.checked")
+
+    def test_run_harness_executes_configured_project_checks(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "harness.yaml").write_text(
+                "\n".join(
+                    [
+                        "project_name: Checked Project",
+                        "output_dir: harness-results",
+                        "checks:",
+                        "  - name: smoke",
+                        "    command: python check_ok.py",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            (root / "check_ok.py").write_text("print('smoke-ok')\n", encoding="utf-8")
+            task_file = root / "task.md"
+            task_file.write_text("Run configured checks.", encoding="utf-8")
+
+            result = run_harness(project_root=root, task_file=task_file)
+
+            self.assertEqual(len(result.check_results), 1)
+            self.assertTrue(result.check_results[0].passed)
+            self.assertIn("smoke-ok", result.check_results[0].stdout)
+
+            output_dir = root / "harness-results"
+            report = (output_dir / "run-report.md").read_text(encoding="utf-8")
+            self.assertIn("## Project Checks", report)
+            self.assertIn("smoke", report)
+
+            payload = json.loads((output_dir / "run-result.json").read_text(encoding="utf-8"))
+            self.assertEqual(payload["checks"][0]["name"], "smoke")
+            self.assertEqual(payload["checks"][0]["exit_code"], 0)
+
+            events = [
+                json.loads(line)
+                for line in (output_dir / "events.jsonl").read_text(encoding="utf-8").splitlines()
+            ]
+            self.assertIn("checks.completed", [event["event"] for event in events])

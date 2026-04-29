@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
+from agent_harness_lab.checks import CheckResult, run_checks
 from agent_harness_lab.config import HarnessConfig, load_config
 from agent_harness_lab.reporting import build_markdown_report, result_to_json, write_events_jsonl, write_json
 from agent_harness_lab.scanner import FileSummary, scan_workspace
@@ -21,6 +22,7 @@ OBSERVABILITY_EVENTS = (
     "task.loaded",
     "workspace.scanned",
     "materials.classified",
+    "checks.completed",
     "report.generated",
     "evaluation.checked",
 )
@@ -45,6 +47,7 @@ class HarnessResult:
     category_counts: dict[str, int]
     runtime_modules: dict[str, str]
     observability_events: tuple[str, ...]
+    check_results: list[CheckResult]
     steps: list[str]
     summary: str
     risks: list[str]
@@ -83,6 +86,7 @@ def build_execution_steps(files: list[FileSummary]) -> list[str]:
     steps.extend(
         [
             "Generate Markdown, JSON, and JSONL artifacts so humans, scripts, and CI can consume the same run.",
+            "Run configured project checks from harness.yaml and capture their outputs for review.",
             "Run lightweight evaluation checks that guard against vague or unsupported claims.",
             "Keep claims bounded to what the target project and generated artifacts prove.",
         ]
@@ -112,6 +116,10 @@ def build_result(
     evidence_files = [
         item for item in files if item.category in {"documentation", "code-or-page", "config-or-data"}
     ][: config.max_evidence_files]
+    check_results = run_checks(project_root, config.checks, config.check_timeout_seconds)
+    if check_results:
+        passed = sum(1 for check in check_results if check.passed)
+        events.append(RuntimeEvent("checks.completed", f"Passed {passed}/{len(check_results)} configured checks", generated_at))
 
     summary = (
         "Agent Harness Lab is a project-ready, TDD-first harness for scanning local codebases, "
@@ -138,6 +146,7 @@ def build_result(
         category_counts=category_counts,
         runtime_modules=RUNTIME_MODULES,
         observability_events=OBSERVABILITY_EVENTS,
+        check_results=check_results,
         steps=build_execution_steps(files),
         summary=summary,
         risks=risks,

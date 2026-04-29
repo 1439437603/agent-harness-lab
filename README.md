@@ -72,13 +72,18 @@ Add `harness.yaml` to the project root:
 project_name: My Service
 output_dir: harness-results
 max_evidence_files: 12
+check_timeout_seconds: 60
 ignore_dirs:
   - node_modules
   - dist
   - tmp
+checks:
+  - name: unit-tests
+    command: python -m unittest discover -s tests -v
 ```
 
 The harness reads this file before scanning and writes artifacts to `output_dir`.
+Configured checks run from the target project root. Results are included in `run-report.md`, `run-result.json`, and `events.jsonl`.
 
 ## What The Harness Demonstrates
 
@@ -88,6 +93,7 @@ The harness reads this file before scanning and writes artifacts to `output_dir`
 - Prints a clear runtime contract for engine, tools, storage, types, and evaluation.
 - Lists observability events that mark decision points in the workflow.
 - Generates reviewable Markdown plus machine-readable JSON and JSONL artifacts.
+- Runs configured project checks such as tests, lint, or build commands.
 - Includes a small evaluation mode with pass/fail checks.
 - Keeps claims bounded to what the repository can prove.
 

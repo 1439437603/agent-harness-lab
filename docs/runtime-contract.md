@@ -14,6 +14,8 @@ Agent Harness Lab uses a deliberately small runtime contract so the repository s
 
 - Inputs are explicit Markdown task files.
 - Outputs are Markdown reports, JSON run summaries, and JSONL event streams.
+- Configured checks run from the project root with captured exit code, stdout, and stderr.
+- Check commands are project-authored configuration and should be reviewed before running on untrusted repositories.
 - The harness does not mutate source files during normal report generation.
 - Claims in generated reports are bounded to what this repository can prove.
 - Future LLM or tool integrations should keep this contract visible in generated artifacts.

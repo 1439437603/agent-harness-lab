@@ -45,6 +45,7 @@ def build_report(task: str, files: list[FileSummary]) -> str:
         category_counts=summarize_categories(files),
         runtime_modules=RUNTIME_MODULES,
         observability_events=OBSERVABILITY_EVENTS,
+        check_results=[],
         steps=build_execution_steps(files),
         summary=(
             "Agent Harness Lab is a project-ready, TDD-first harness for scanning local codebases, "
@@ -61,7 +62,16 @@ def build_report(task: str, files: list[FileSummary]) -> str:
 
 
 def write_report(task_file: Path, report_file: Path) -> Path:
-    result = run_harness(ROOT, task_file, report_file.parent)
+    base_config = load_config(ROOT)
+    config = HarnessConfig(
+        project_name=base_config.project_name,
+        output_dir=base_config.output_dir,
+        ignore_dirs=base_config.ignore_dirs,
+        max_evidence_files=base_config.max_evidence_files,
+        check_timeout_seconds=base_config.check_timeout_seconds,
+        checks=(),
+    )
+    result = run_harness(ROOT, task_file, report_file.parent, config=config)
     generated_report = result.output_dir / "run-report.md"
     if generated_report != report_file:
         report_file.write_text(generated_report.read_text(encoding="utf-8"), encoding="utf-8")
