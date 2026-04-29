@@ -1,7 +1,8 @@
 # Agent Harness Lab Run Report
 
-- Run time: 2026-04-29 10:23:33
-- Workspace: `D:\yanjiu\agent-harness-lab`
+- Run time: 2026-04-29T10:36:30
+- Project: Agent Harness Lab
+- Project root: `D:\yanjiu\agent-harness-lab`
 
 ## Input Task
 
@@ -25,28 +26,32 @@ I want an agent harness that can turn a local workspace into reviewable evidence
 
 ## Workspace Scan
 
-- code-or-page: 2 files
-- documentation: 7 files
-- other: 2 files
+- code-or-page: 9 files
+- config-or-data: 2 files
+- documentation: 6 files
+- other: 1 files
 
 ## Evidence Files
 
-- `agent_workflow.py` (code-or-page, 9044 bytes)
-- `tests\test_agent_workflow.py` (code-or-page, 1869 bytes)
-- `README.md` (documentation, 3369 bytes)
-- `application-answer.md` (documentation, 1972 bytes)
-- `docs\evaluation-strategy.md` (documentation, 849 bytes)
-- `docs\runtime-contract.md` (documentation, 1220 bytes)
-- `evidence-checklist.md` (documentation, 781 bytes)
-- `examples\task.md` (documentation, 574 bytes)
-- `output\run-report.md` (documentation, 3767 bytes)
+- `agent_harness_lab\__init__.py` (code-or-page, 421 bytes)
+- `agent_harness_lab\cli.py` (code-or-page, 2176 bytes)
+- `agent_harness_lab\config.py` (code-or-page, 2416 bytes)
+- `agent_harness_lab\engine.py` (code-or-page, 6855 bytes)
+- `agent_harness_lab\reporting.py` (code-or-page, 2864 bytes)
+- `agent_harness_lab\scanner.py` (code-or-page, 1460 bytes)
+- `agent_workflow.py` (code-or-page, 4086 bytes)
+- `tests\test_agent_workflow.py` (code-or-page, 1982 bytes)
+- `tests\test_project_ready_harness.py` (code-or-page, 2943 bytes)
+- `harness.yaml` (config-or-data, 153 bytes)
+- `pyproject.toml` (config-or-data, 307 bytes)
+- `README.md` (documentation, 4296 bytes)
 
 ## Runtime Contract
 
 - `engine`: Task ingestion, workspace scan, step planning, report assembly.
 - `tools`: Deterministic filesystem inspection with explicit file classification.
-- `storage`: Markdown task briefs, generated reports, and evaluation artifacts.
-- `types`: Dataclasses that make file summaries and evaluation cases inspectable.
+- `storage`: Markdown task briefs, JSON results, JSONL events, and generated reports.
+- `types`: Dataclasses that make file summaries, runtime events, and run results inspectable.
 - `evaluation`: Built-in checks that keep the harness output bounded and reproducible.
 
 ## Observability Events
@@ -60,25 +65,25 @@ I want an agent harness that can turn a local workspace into reviewable evidence
 ## Harness Steps
 
 1. Read the task brief and lock the goal, expected output, and constraints.
-2. Scan the workspace and classify available files into documentation, code/page assets, media evidence, and other materials.
-3. Use Markdown documents as the primary source for project claims, evidence notes, and review-ready copy.
-4. Use Python and page files as runnable or inspectable proof that the harness is more than a static write-up.
-5. Generate a compact action plan with risks, verification points, and the highest-ROI next step.
-6. Write a Markdown report that can be attached to a grant application or reviewed in GitHub.
-7. Keep claims bounded to what the repository proves; do not invent production usage, users, or token spend.
+2. Load harness configuration so project name, ignored directories, and output location are explicit.
+3. Scan the target project and classify available files into documentation, code/page assets, config/data, media evidence, and other materials.
+4. Use project documentation as the primary source for claims, evidence notes, and review-ready copy.
+5. Use source files as inspectable evidence that the harness is analyzing a real project tree.
+6. Preserve config/data files as machine-readable evidence for CI or downstream automation.
+7. Generate Markdown, JSON, and JSONL artifacts so humans, scripts, and CI can consume the same run.
+8. Run lightweight evaluation checks that guard against vague or unsupported claims.
+9. Keep claims bounded to what the target project and generated artifacts prove.
 
 ## Result Summary
 
-Agent Harness Lab is a TDD-first reference implementation for building reproducible AI agent workflows. This run demonstrates a minimal but reviewable loop: task input, workspace scan, material classification, runtime-contract reporting, observability event listing, step decomposition, risk recording, and Markdown report generation.
-
-The current version intentionally stays local and deterministic. It does not claim production traffic, commercial impact, or external model integration. The value is that the workflow can be run, inspected, tested, evaluated, and extended into a stronger agent runtime.
+Agent Harness Lab is a project-ready, TDD-first harness for scanning local codebases, producing reproducible agent workflow reports, and validating outputs with lightweight evaluation checks.
 
 ## Risks
 
-- This is a local reference implementation, not a deployed commercial agent.
-- It does not call external LLM APIs yet, so model-driven tool execution remains future work.
-- Usage evidence should be limited to repository code, terminal runs, generated reports, and screenshots.
+- The harness is deterministic and local; external LLM tool execution is not enabled in v0.2.
+- Generated reports should be treated as evidence summaries, not as proof of production usage.
+- Large repositories may need narrower ignore rules before report output is concise.
 
 ## Highest-ROI Next Step
 
-Publish this repository, attach a terminal run screenshot and the generated report, then extend the harness with a small tool registry and more evaluation cases.
+Integrate this command into a real project workflow with `agent-harness run --project <path> --task <file>`, then add project-specific evaluation cases.

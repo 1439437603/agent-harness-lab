@@ -1,9 +1,12 @@
 [project]
 name = "agent-harness-lab"
-version = "0.1.0"
-description = "A TDD-first Agent Harness prototype for reproducible AI agent workflows."
+version = "0.2.0"
+description = "A project-ready, TDD-first Agent Harness for reproducible AI agent workflows."
 requires-python = ">=3.11"
 dependencies = []
+
+[project.scripts]
+agent-harness = "agent_harness_lab.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

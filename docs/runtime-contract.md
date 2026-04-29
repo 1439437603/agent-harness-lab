@@ -4,16 +4,16 @@ Agent Harness Lab uses a deliberately small runtime contract so the repository s
 
 ## Modules
 
-- `engine`: Loads the task, scans the workspace, builds harness steps, and writes the report.
+- `engine`: Loads the task, scans the workspace, builds harness steps, and writes artifacts.
 - `tools`: Provides deterministic filesystem inspection and file classification.
-- `storage`: Uses Markdown files for task briefs, generated reports, and application evidence.
+- `storage`: Uses Markdown task briefs plus Markdown, JSON, and JSONL run artifacts.
 - `types`: Defines small dataclasses for file summaries and evaluation cases.
 - `evaluation`: Runs repeatable pass/fail checks against generated report content.
 
 ## Protocol Guarantees
 
 - Inputs are explicit Markdown task files.
-- Outputs are deterministic Markdown reports.
+- Outputs are Markdown reports, JSON run summaries, and JSONL event streams.
 - The harness does not mutate source files during normal report generation.
 - Claims in generated reports are bounded to what this repository can prove.
 - Future LLM or tool integrations should keep this contract visible in generated artifacts.

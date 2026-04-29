@@ -10,6 +10,12 @@ The built-in evaluation command is:
 python .\agent_workflow.py --eval
 ```
 
+For another project:
+
+```powershell
+python -m agent_harness_lab.cli eval --project D:\path\to\project --task D:\path\to\task.md
+```
+
 It verifies that generated report content includes:
 
 - Workspace scan evidence.
@@ -17,6 +23,7 @@ It verifies that generated report content includes:
 - Bounded claim language.
 - Reproducible evidence references.
 - Runtime and observability contracts.
+- Machine-readable artifacts for CI or follow-up automation.
 
 ## Why This Matters
 

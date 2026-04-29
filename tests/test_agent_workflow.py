@@ -3,6 +3,8 @@ import tempfile
 import unittest
 
 import agent_workflow
+from agent_harness_lab.config import HarnessConfig, load_config
+from agent_harness_lab.engine import run_harness
 
 
 class AgentWorkflowTests(unittest.TestCase):

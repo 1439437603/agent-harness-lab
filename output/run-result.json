@@ -1,0 +1,105 @@
+{
+  "generated_at": "2026-04-29T10:36:30",
+  "project_name": "Agent Harness Lab",
+  "project_root": "D:\\yanjiu\\agent-harness-lab",
+  "task_file": "D:\\yanjiu\\agent-harness-lab\\examples\\task.md",
+  "category_counts": {
+    "code-or-page": 9,
+    "config-or-data": 2,
+    "documentation": 6,
+    "other": 1
+  },
+  "evidence_files": [
+    {
+      "path": "agent_harness_lab\\__init__.py",
+      "size": 421,
+      "category": "code-or-page"
+    },
+    {
+      "path": "agent_harness_lab\\cli.py",
+      "size": 2176,
+      "category": "code-or-page"
+    },
+    {
+      "path": "agent_harness_lab\\config.py",
+      "size": 2416,
+      "category": "code-or-page"
+    },
+    {
+      "path": "agent_harness_lab\\engine.py",
+      "size": 6855,
+      "category": "code-or-page"
+    },
+    {
+      "path": "agent_harness_lab\\reporting.py",
+      "size": 2864,
+      "category": "code-or-page"
+    },
+    {
+      "path": "agent_harness_lab\\scanner.py",
+      "size": 1460,
+      "category": "code-or-page"
+    },
+    {
+      "path": "agent_workflow.py",
+      "size": 4086,
+      "category": "code-or-page"
+    },
+    {
+      "path": "tests\\test_agent_workflow.py",
+      "size": 1982,
+      "category": "code-or-page"
+    },
+    {
+      "path": "tests\\test_project_ready_harness.py",
+      "size": 2943,
+      "category": "code-or-page"
+    },
+    {
+      "path": "harness.yaml",
+      "size": 153,
+      "category": "config-or-data"
+    },
+    {
+      "path": "pyproject.toml",
+      "size": 307,
+      "category": "config-or-data"
+    },
+    {
+      "path": "README.md",
+      "size": 4296,
+      "category": "documentation"
+    }
+  ],
+  "runtime_modules": {
+    "engine": "Task ingestion, workspace scan, step planning, report assembly.",
+    "tools": "Deterministic filesystem inspection with explicit file classification.",
+    "storage": "Markdown task briefs, JSON results, JSONL events, and generated reports.",
+    "types": "Dataclasses that make file summaries, runtime events, and run results inspectable.",
+    "evaluation": "Built-in checks that keep the harness output bounded and reproducible."
+  },
+  "observability_events": [
+    "task.loaded",
+    "workspace.scanned",
+    "materials.classified",
+    "report.generated",
+    "evaluation.checked"
+  ],
+  "steps": [
+    "Read the task brief and lock the goal, expected output, and constraints.",
+    "Load harness configuration so project name, ignored directories, and output location are explicit.",
+    "Scan the target project and classify available files into documentation, code/page assets, config/data, media evidence, and other materials.",
+    "Use project documentation as the primary source for claims, evidence notes, and review-ready copy.",
+    "Use source files as inspectable evidence that the harness is analyzing a real project tree.",
+    "Preserve config/data files as machine-readable evidence for CI or downstream automation.",
+    "Generate Markdown, JSON, and JSONL artifacts so humans, scripts, and CI can consume the same run.",
+    "Run lightweight evaluation checks that guard against vague or unsupported claims.",
+    "Keep claims bounded to what the target project and generated artifacts prove."
+  ],
+  "risks": [
+    "The harness is deterministic and local; external LLM tool execution is not enabled in v0.2.",
+    "Generated reports should be treated as evidence summaries, not as proof of production usage.",
+    "Large repositories may need narrower ignore rules before report output is concise."
+  ],
+  "next_step": "Integrate this command into a real project workflow with `agent-harness run --project <path> --task <file>`, then add project-specific evaluation cases."
+}

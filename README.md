@@ -1,8 +1,8 @@
 # Agent Harness Lab
 
-A TDD-first Agent Harness prototype for building, evaluating, and showcasing reproducible AI agent workflows.
+A project-ready, TDD-first Agent Harness for scanning local codebases, producing reproducible agent workflow reports, and validating outputs with lightweight evaluation checks.
 
-Agent Harness Lab is a small, runnable Python reference implementation that demonstrates the foundation of an agent runtime: task input, workspace scanning, material classification, runtime-contract reporting, observability events, evaluation cases, and Markdown report generation.
+Agent Harness Lab is a small, runnable Python harness that can be used against real local projects. It provides task input, workspace scanning, material classification, runtime-contract reporting, observability events, Markdown/JSON/JSONL artifacts, and lightweight evaluation checks.
 
 It is designed as truthful GitHub-ready evidence for an AI agent token grant application. It does not claim production users, commercial impact, or external model integration in v1.
 
@@ -18,7 +18,7 @@ The guiding ideas are:
 - Record risks and verification evidence.
 - Spend future token budget on long-context analysis, tool execution, and multi-step review loops.
 
-## Run
+## Run In This Repository
 
 ```powershell
 python .\agent_workflow.py
@@ -28,6 +28,8 @@ This generates:
 
 ```text
 output/run-report.md
+output/run-result.json
+output/events.jsonl
 ```
 
 Run the built-in evaluation cases:
@@ -42,14 +44,50 @@ Use a custom task file:
 python .\agent_workflow.py --task .\examples\task.md --report .\output\run-report.md
 ```
 
+## Run Against Another Project
+
+Use the module CLI directly:
+
+```powershell
+python -m agent_harness_lab.cli run --project D:\path\to\project --task D:\path\to\task.md
+```
+
+Evaluate the generated report:
+
+```powershell
+python -m agent_harness_lab.cli eval --project D:\path\to\project --task D:\path\to\task.md
+```
+
+The compatibility wrapper also accepts the same subcommands:
+
+```powershell
+python .\agent_workflow.py run --project . --task .\examples\task.md
+```
+
+## Configure A Project
+
+Add `harness.yaml` to the project root:
+
+```yaml
+project_name: My Service
+output_dir: harness-results
+max_evidence_files: 12
+ignore_dirs:
+  - node_modules
+  - dist
+  - tmp
+```
+
+The harness reads this file before scanning and writes artifacts to `output_dir`.
+
 ## What The Harness Demonstrates
 
 - Reads a Markdown task brief.
-- Scans the repository using only the Python standard library.
+- Scans any local project path using only the Python standard library.
 - Classifies files as documentation, code/page assets, media evidence, or other material.
 - Prints a clear runtime contract for engine, tools, storage, types, and evaluation.
 - Lists observability events that mark decision points in the workflow.
-- Generates a reviewable Markdown report.
+- Generates reviewable Markdown plus machine-readable JSON and JSONL artifacts.
 - Includes a small evaluation mode with pass/fail checks.
 - Keeps claims bounded to what the repository can prove.
 
